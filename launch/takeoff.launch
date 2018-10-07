@@ -1,0 +1,15 @@
+<launch>
+        <arg name="droneip" default="192.168.1.1" />
+        <node name="ardrone_driver" pkg="ardrone_autonomy" type="ardrone_driver" output="screen" args="-ip $(arg droneip)">
+                <param name="navdata_demo" value="False" />
+                <param name="realtime_navdata" value="True" />
+                <param name="realtime_video" value="True" />
+                <param name="looprate" value="30" />
+                <param name="altitude_max" value="1300" />
+                <param name="altitude_min" value="50" />
+        </node>
+        <node name = 'Camera_init' pkg = 'ardrone_project' type = 'get_coordinates.py' />
+        <node name = 'Takeoff' pkg = 'ardrone_project' type = 'takeoff.py' />
+        <node name = 'Max height' pkg = 'ardrone_project' type = 'max_height.py' />
+        <node name = 'Controller' pkg = 'ardrone_project' type = 'controller_tester.py' output = "screen" required = "true"/>
+</launch>

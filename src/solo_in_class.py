@@ -1,0 +1,71 @@
+#!/usr/bin/env python
+
+import rospy
+from geometry_msgs.msg import Twist # msg type for cmd_vel
+from ardrone_project.msg import Coords
+from math import pow, atan2, sqrt
+
+class ardrone_solo():
+
+
+	def __init__(self):
+		rospy.init_node('ardrone_solo',anonymous = True)
+		self.velocity_publisher = rospy.Publisher('/cmd_vel', Twist, queue_size = 10)
+		self.coords_subscriber = rospy.Subscriber('/ardrone/all_coordinates', Coords, self.callback)
+		self.coords = Coords()
+		self.rate = rospy.Rate(10)
+		print('Hi_2')
+
+	def callback(self,data):
+		self.coords = data
+			# print('Hi callback')
+
+
+	def pid_controller(self):
+		
+		# # 100 is more lineant
+		# tolerance = 75
+
+		# vel_msg = Twist()
+
+		# vel_msg.angular.x = 0
+		# vel_msg.angular.y = 0
+		# vel_msg.linear.x = 0
+		# vel_msg.linear.y = 0
+		# vel_msg.linear.z = 0
+		print('Hi pid')
+
+		print(sqrt( pow((self.coords.x_b - self.coords.x_c),2) + pow((self.coords.y_b - self.coords.y_c),2)))
+
+		# while sqrt( pow((self.coords.x_b - self.coords.x_c),2) + pow((self.coords.y_b - self.coords.y_c),2)) > tolerance:
+
+		# 	# Turn right
+		# 	if self.coords.x_b - self.coords.x_c > 0:
+		# 		variable = -kp_angular_z*sqrt(pow((self.coords.x_b - self.coords.x_c),2) + pow((self.coords.y_b - self.coords.y_c),2))*normalizer
+		# 		vel_msg.angular.z = 1/(1+np.exp(-variable/10))*2 - 1
+
+		# 	# Turn left
+		# 	elif self.coords.x_b - self.coords.x_c < 0:
+		# 		temp_var = kp_angular_z*sqrt(pow((self.coords.x_b - self.coords.x_c),2) + pow((self.coords.y_b - self.coords.y_c),2))*normalizer	
+		# 		vel_msg.angular.z = 1/(1+np.exp(-temp_var/10))*2 - 1
+		
+		# 	# If tracking is lost, enter auto-hover mode ( Test this out separately)
+		# 	if coords.track == False:
+		# 		vel_msg.angular.z = 0
+
+		# 	print(vel_msg.angular.z)
+		# 	self.velocity_publisher.publish(vel_msg)
+		# 	self.rate.sleep()
+
+		# vel_msg.angular.z = 0
+		# self.velocity_publisher.publish(vel_msg)
+
+		rospy.spin()
+
+
+if __name__ == '__main__':
+	try:
+		x = ardrone_pid()
+		x.pid_controller()
+
+	except rospy.ROSInterruptException: pass
